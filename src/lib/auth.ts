@@ -3,13 +3,29 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma as prismaClient } from "./prisma";
 import { sendMail } from "../utils/mailServices";
 // If your Prisma file is located elsewhere, you can change the path
-
+import { bearer, emailOTP } from "better-auth/plugins";
+import { getVerificationTemplate } from "../templates/mail-templates";
 
 const prisma = prismaClient;
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql", // or "mysql", "postgresql", ...etc
     }),
+    plugins:[ bearer(),
+
+        emailOTP({
+           async sendVerificationOTP({email,otp,type}) {
+               await sendMail({
+                    email: email,
+                    name: "User",
+                    subject: `Your Verification Code: ${otp}`,
+                    body: `<p>Your code is <b>${otp}</b>. It will expire soon.</p>`,
+                });
+           },
+           sendVerificationOnSignUp:true
+        })
+    ],
+    
     emailAndPassword:{
 enabled:true,
 autoSignIn:false,
@@ -34,20 +50,30 @@ additionalFields:{
     }
 }
     },
-    emailVerification:{
-
-        sendVerificationEmail: async ( { user, url, token }, request) => {
+//     emailVerification:{
+// sendOnSignUp: true,
+//         autoSignInAfterVerification: true,
+//         sendVerificationEmail: async ( { user, url, token }, request) => {
     
-            await sendMail({
-                email:user.email,
-                name:user.name,
-                subject: "verify email",
-                body:`this verifiction email  token = ${token}`
-            })
-     
-    },
+// // 1. Create your desired destination
+//         const myCustomLandingPage = "http://localhost:5000/success-verification";
+        
+//         // 2. Build the final link
+//         // We use encodeURIComponent to ensure the URL doesn't break
+//         const finalLink = `http://localhost:5000/api/auth/verify-email?token=${token}&callbackURL=http://localhost:5000/success-verification`;
 
-    },
+//            const result = await sendMail({
+//                 email:user.email,
+//                 name:user.name,
+//                 subject: "verify email",
+//                 body:getVerificationTemplate(user.name,finalLink)
+//             })
+     
+//             console.log(result.messageId,"sended");
+            
+//     },
+
+//     },
     
     socialProviders:{
         google:{
