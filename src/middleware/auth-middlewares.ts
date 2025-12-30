@@ -19,7 +19,7 @@ export const isAuthenticate = (...roles: string[]) => {
       const session = await auth.api.getSession({ headers });
 
       if (session) {
-        // Attach the user and session data to the request object for use in subsequent handlers
+      // Attach the user and session data to the request object for use in subsequent handlers
         req.user = session.user;
         req.session = session.session;
       

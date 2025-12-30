@@ -4,19 +4,16 @@ import express, { Router } from "express";
 import { asyncHandler } from "../../utils/asyncHandler";
 import { auth } from "../../lib/auth";
 import { isAuthenticate } from "../../middleware/auth-middlewares";
+import { userControllers } from "./user.controller";
 
 
 
 const router = express.Router();
 
 
+router.get("/me", isAuthenticate(), asyncHandler(userControllers.getProfileDetails));
+router.post("/change-password", isAuthenticate(), asyncHandler(userControllers.changePassword));
 
-router.get("/profile",isAuthenticate(), async (req, res) => {
- 	const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
-	return res.json(session);
-});
 
 const userRouter:Router = router;
 export default userRouter
