@@ -11,7 +11,7 @@ import { userControllers } from "./user.controller";
 const router = express.Router();
 
 
-router.get("/me", isAuthenticate(), asyncHandler(userControllers.getProfileDetails));
+router.get("/profile", isAuthenticate(), asyncHandler(userControllers.getProfileDetails));
 router.post("/change-password", isAuthenticate(), asyncHandler(userControllers.changePassword));
 
 

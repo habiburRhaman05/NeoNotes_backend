@@ -9,7 +9,7 @@ export const createPostSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
   tags: z.array(z.string()).optional(),
   viwes: z.number().int().optional(),
-  authorId: z.number(),
+  authorId: z.string(),
 });
 
 // inferred type for service layer

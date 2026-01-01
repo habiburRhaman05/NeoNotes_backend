@@ -12,11 +12,11 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql", // or "mysql", "postgresql", ...etc
     }),
+    trustedOrigins:[
+        "http://localhost:3000",
+        "https://postella-beta.vercel.app"
+    ],
     plugins: [bearer(),
-
-
-
-
     emailOTP({
         expiresIn: 600,
         async sendVerificationOTP({ email, otp, type }) {

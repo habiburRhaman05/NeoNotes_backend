@@ -19,3 +19,19 @@ export type createPostInput = {
     content: string;
 };
 
+
+
+export type PostQueries = {
+  search?: string | undefined;
+  user?: string | undefined;
+  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED" | undefined;
+  tags?: string[] | undefined;
+  isFeatured?: boolean | undefined;
+
+  // page?: number;
+  // limit?: number;
+
+  // sortBy?: "createdAt" | "viwes" | "title";
+  // order?: "asc" | "desc"; // sortBy?: "createdAt" | "viwes" | "title";
+  // order?: "asc" | "desc";
+};

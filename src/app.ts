@@ -8,14 +8,16 @@ import postRouter from './modules/post/post.router';
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { auth } from './lib/auth';
 import userRouter from './modules/user/user.router';
-
+import { corsConfig } from './config/cors';
+import cors from "cors"
 
 const app: Express = express();
+app.use(cors(corsConfig))
 app.all('/api/auth/*splat', toNodeHandler(auth));
 app.use(express.json({ limit: '1mb' }));
 app.use("/api/v1/post",postRouter)
 app.use("/api/v1/user",userRouter)
-
+app.set("trust proxy", 1);
 export const startServer = async () => {
   try {
 
