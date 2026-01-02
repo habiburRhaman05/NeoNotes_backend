@@ -13,5 +13,16 @@ commentRouter.post(
   validate(commentSchemas.createComment),
   asyncHandler(commentControllers.createNewComment)
 );
+commentRouter.put(
+  "/:id/update",
+  isAuthenticate(),
+  // validate(commentSchemas.updateSchema),
+  asyncHandler(commentControllers.updateComment)
+);
+commentRouter.delete(
+  "/:id/delete",
+  isAuthenticate(),
+  asyncHandler(commentControllers.deleteComment)
+);
 
 export default commentRouter;

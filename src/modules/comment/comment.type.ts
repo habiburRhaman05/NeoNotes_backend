@@ -1,6 +1,6 @@
 export enum CommentStatus {
-  APPROVED = "APPROVED",
-  REJECT = "REJECT"
+ "APPROVED",
+ "REJECT"
 }
 
 export interface Comment {
@@ -9,7 +9,7 @@ export interface Comment {
   authorId: string;
   postId: number;
   parentId?: number | null;
-  status: CommentStatus;
+  status:  "APPROVED" | "REJECT";
   createdAt?: Date;
   updatedAt?: Date;
 }

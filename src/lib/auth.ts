@@ -17,27 +17,27 @@ export const auth = betterAuth({
         "https://postella-beta.vercel.app"
     ],
     plugins: [bearer(),
-    emailOTP({
-        expiresIn: 600,
-        async sendVerificationOTP({ email, otp, type }) {
-            if (type === "forget-password") {
-                await sendMail({
-                    email: email,
-                    name: "User",
-                    subject: "Reset Your Password",
-                    body: `<p>Your password reset code is: <b>${otp}</b></p>`,
-                });
-            }
-            //    await sendMail({
-            //         email: email,
-            //         name: "User",
-            //         subject: `Your Verification Code: ${otp}`,
-            //         body: `<p> type = ${type} Your code is <b>${otp}</b>. It will expire soon.</p>`,
-            //     });
-        },
+    // emailOTP({
+    //     expiresIn: 600,
+    //     async sendVerificationOTP({ email, otp, type }) {
+    //         if (type === "forget-password") {
+    //             await sendMail({
+    //                 email: email,
+    //                 name: "User",
+    //                 subject: "Reset Your Password",
+    //                 body: `<p>Your password reset code is: <b>${otp}</b></p>`,
+    //             });
+    //         }
+    //         //    await sendMail({
+    //         //         email: email,
+    //         //         name: "User",
+    //         //         subject: `Your Verification Code: ${otp}`,
+    //         //         body: `<p> type = ${type} Your code is <b>${otp}</b>. It will expire soon.</p>`,
+    //         //     });
+    //     },
 
-        sendVerificationOnSignUp: true
-    })
+    //     sendVerificationOnSignUp: true
+    // })
     ],
 
     emailAndPassword: {
@@ -65,30 +65,30 @@ export const auth = betterAuth({
             }
         }
     },
-    //     emailVerification:{
-    // sendOnSignUp: true,
-    //         autoSignInAfterVerification: true,
-    //         sendVerificationEmail: async ( { user, url, token }, request) => {
+        emailVerification:{
+    sendOnSignUp: true,
+            autoSignInAfterVerification: false,
+            sendVerificationEmail: async ( { user, url, token }, request) => {
 
-    // // 1. Create your desired destination
-    //         const myCustomLandingPage = "http://localhost:5000/success-verification";
+    // 1. Create your desired destination
+            const myCustomLandingPage = "http://localhost:3000/success-verification";
 
-    //         // 2. Build the final link
-    //         // We use encodeURIComponent to ensure the URL doesn't break
-    //         const finalLink = `http://localhost:5000/api/auth/verify-email?token=${token}&callbackURL=http://localhost:5000/success-verification`;
+            // 2. Build the final link
+            // We use encodeURIComponent to ensure the URL doesn't break
+            const finalLink = `http://localhost:5000/api/auth/verify-email?token=${token}&callbackURL=${myCustomLandingPage}`;
 
-    //            const result = await sendMail({
-    //                 email:user.email,
-    //                 name:user.name,
-    //                 subject: "verify email",
-    //                 body:getVerificationTemplate(user.name,finalLink)
-    //             })
+               const result = await sendMail({
+                    email:user.email,
+                    name:user.name,
+                    subject: "verify email",
+                    body:getVerificationTemplate(user.name,finalLink)
+                })
 
-    //             console.log(result.messageId,"sended");
+                console.log(result.messageId,"sended");
 
-    //     },
+        },
 
-    //     },
+        },
 
     socialProviders: {
         google: {

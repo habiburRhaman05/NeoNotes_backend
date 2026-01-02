@@ -20,6 +20,9 @@ app.use("/api/v1/post",postRouter)
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/comment",commentRouter)
 app.set("trust proxy", 1);
+app.get("/welcome-page",(req,res)=>{
+  res.send("welcome to our app")
+})
 export const startServer = async () => {
   try {
 
