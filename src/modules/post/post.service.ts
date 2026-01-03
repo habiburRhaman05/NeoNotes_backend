@@ -1,3 +1,4 @@
+import { constantVariables } from "../../constant";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import { CreatePostInput } from "./post.schema";
@@ -5,6 +6,13 @@ import { createPostInput, Post, PostQueries } from "./post.types";
 
 const fetchAllPosts = async (queries: PostQueries) => {
   const filters: any[] = [];
+
+  // pagination
+  if(queries.page){
+    filters.push({page:queries.page || 1})
+  }
+
+  
 
   /* 🔍 Search */
   if (queries.search) {
@@ -54,6 +62,8 @@ const fetchAllPosts = async (queries: PostQueries) => {
     });
   }
 
+
+  const skipData = (queries.page - 1) * constantVariables.postLimit || 0
   const result = await prisma.post.findMany({
     include: {
       author: true,
@@ -64,6 +74,8 @@ const fetchAllPosts = async (queries: PostQueries) => {
         email: queries.user!,
       },
     },
+    skip:skipData,
+    take:constantVariables.postLimit
   });
 
   return result;
@@ -105,6 +117,7 @@ const fetchPostDeatils = async (id: number) => {
         },
       },
     },
+    
   })
   return data
 };

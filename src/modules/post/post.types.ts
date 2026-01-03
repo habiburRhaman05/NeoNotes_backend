@@ -27,6 +27,7 @@ export type PostQueries = {
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED" | undefined;
   tags?: string[] | undefined;
   isFeatured?: boolean | undefined;
+  page:number
 
   // page?: number;
   // limit?: number;
