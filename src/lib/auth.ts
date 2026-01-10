@@ -113,7 +113,7 @@ export const auth = betterAuth({
       
       sameSite: "none", // Must be "none" for cross-site usage
       secure: true, // Must be true when SameSite is "none"
-      httpOnly: true, // Good practice for security
+      httpOnly: false, // Good practice for security
     }
 }
 });
