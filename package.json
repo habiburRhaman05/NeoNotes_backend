@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx watch src/server.ts",
-    "build": "prisma generate && tsc",
+    "build": "tsc && prisma generate ",
     "start": "npx tsx watch src/server.ts",
     "postinstall": "prisma generate"
   },

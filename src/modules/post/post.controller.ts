@@ -190,12 +190,7 @@ const deleteSavedPost: Controller = async (req, res) => {
 const getAllPostsByUserId: Controller = async (req, res) => {
   const { userId } = req.params;
 
-  if (!userId) {
-    return sendError(res, {
-      message: "userId not Found in Body data",
-    });
-  }
-
+ 
   if (req.user?.id !== userId) {
     return sendError(res, {
       message: "you don't have access!",
@@ -205,7 +200,7 @@ const getAllPostsByUserId: Controller = async (req, res) => {
  
 
 
-  const userPostsList = await postServices.fetchPostsListByUserId(userId);
+  const userPostsList = await postServices.fetchPostsListByUserId(userId!);
 
   const message = userPostsList.length > 0
     ? "fetch posts successfully"
