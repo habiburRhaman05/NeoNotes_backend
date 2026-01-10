@@ -1,4 +1,3 @@
-//import the auth client
 import { Request, Response } from "express";
 import { Controller } from "../../types/controller";
 import { sendError, sendSuccess } from "../../utils/apiResponse";
@@ -6,31 +5,27 @@ import postServices from "./post.service";
 
 const getAllPosts: Controller = async (req: Request, res: Response) => {
   const { search, tags, isFeatured, status } = req.query;
-  const { page } = req.params;
+  // req.params.page কে string হিসেবে নিশ্চিত করা হয়েছে
+  const pageStr = req.params.page as string;
 
   const finalQuery = {
     search: search as string | undefined,
-
-    page: parseInt(page || "1"),
+    page: parseInt(pageStr || "1"),
     tags: typeof tags === "string" ? tags.split(",") : undefined,
-
-    isFeatured:
-      typeof isFeatured === "string" ? isFeatured === "true" : undefined,
-
+    isFeatured: typeof isFeatured === "string" ? isFeatured === "true" : undefined,
     status: status as "DRAFT" | "PUBLISHED" | "ARCHIVED" | undefined,
   };
 
   const allPosts: any = await postServices.fetchAllPosts(finalQuery);
 
   return sendSuccess(res, {
-    message:
-      allPosts.data.length > 0 ? "Fetched all posts successfully" : "No posts found",
+    message: allPosts.data.length > 0 ? "Fetched all posts successfully" : "No posts found",
     data: allPosts.data || [],
   });
 };
 
 const getPostDetails: Controller = async (req, res) => {
-  const postId = req.params.postId;
+  const postId = req.params.postId as string;
 
   if (!postId) {
     return sendError(res, {
@@ -51,31 +46,32 @@ const getPostDetails: Controller = async (req, res) => {
     data: postData,
   });
 };
+
 const deletePost: Controller = async (req, res) => {
-  const postId = parseInt(req.params.postId!);
+  const postIdStr = req.params.postId as string;
+  const postId = parseInt(postIdStr);
 
   if (isNaN(postId)) {
     return sendError(res, { message: "Invalid PostId" });
   }
 
-  // Check if post exists first
   const post = await postServices.fetchPostDeatils(postId);
 
   if (!post) {
     return sendError(res, { message: "Post not found" });
   }
 
-  // Delete the post
   await postServices.deletePostById(postId);
 
   return sendSuccess(res, { message: "Post deleted successfully" });
 };
 
-const createPost: Controller = async (req, res, next) => {
+const createPost: Controller = async (req, res) => {
   const userId = req.user?.id;
-  console.log("userId", userId, req.user?.email);
-
+  
+  // createPostService কল করার সময় userId নিশ্চিত করা হয়েছে
   const newPost = await postServices.createPostService(req.body, userId!);
+  
   return sendSuccess(res, {
     statusCode: 201,
     data: newPost,
@@ -84,53 +80,43 @@ const createPost: Controller = async (req, res, next) => {
 };
 
 const updatePost: Controller = async (req, res) => {
-  const postId = parseInt(req.params.postId!);
-
+  const postIdStr = req.params.postId as string;
+  const postId = parseInt(postIdStr);
   const updatedData = req.body;
 
   if (isNaN(postId)) {
     return sendError(res, { message: "Invalid PostId" });
   }
 
-  // Check if post exists first
   const post = await postServices.fetchPostDeatils(postId);
 
   if (!post) {
     return sendError(res, { message: "Post not found" });
   }
 
-  // Delete the post
   await postServices.updatePost(postId, updatedData);
 
   return sendSuccess(res, { message: "Post updated successfully" });
 };
 
 const getSavedPostsList: Controller = async (req, res) => {
-  
-
-
-  const userId = req.user?.id
-
-
-
+  const userId = req.user?.id;
   const postsList = await postServices.getSavedPostsByUserId(userId!);
 
-  const message =
-    postsList.length === 0
-      ? "no saved posts found"
-      : "fetch saved posts successfully";
+  const message = postsList.length === 0
+    ? "no saved posts found"
+    : "fetch saved posts successfully";
 
   return sendSuccess(res, { message, data: postsList });
 };
+
 const createNewSavedPost: Controller = async (req, res) => {
-  const {  postId } = req.body;
+  const { postId } = req.body;
+  const userId = req.user?.id!;
 
- 
- const userId = req.user?.id!
+  const post = await postServices.fetchPostDeatils(postId);
 
-  const post = await postServices.fetchPostDeatils(postId)
-
-    if (!post) {
+  if (!post) {
     return sendError(res, {
       message: "post id not a valid try another",
     });
@@ -141,72 +127,56 @@ const createNewSavedPost: Controller = async (req, res) => {
     postId,
   });
 
-  const message = newSavedPost.id
-    ? "post saved successfully"
-    : "failed to saved post";
+  const message = newSavedPost.id ? "post saved successfully" : "failed to saved post";
 
   return sendSuccess(res, { statusCode: 201, message, data: newSavedPost });
 };
+
 const deleteSavedPost: Controller = async (req, res) => {
   const { userId } = req.body;
-  const {postId} = req.params
+  const postId = req.params.postId as string;
 
   if (!userId) {
-    return sendError(res, {
-      message: "userId not Found in Body data",
-    });
+    return sendError(res, { message: "userId not Found in Body data" });
   }
   if (!postId) {
-    return sendError(res, {
-      message: "postId not Found in Body data",
-    });
+    return sendError(res, { message: "postId not Found in params" });
   }
 
   if (req.user?.id !== userId) {
-    return sendError(res, {
-      message: "you don't have access!",
-    });
+    return sendError(res, { message: "you don't have access!" });
   }
 
-  const post = await postServices.fetchPostDeatils(parseInt(postId))
+  const post = await postServices.fetchPostDeatils(parseInt(postId));
 
-    if (!post) {
-    return sendError(res, {
-      message: "post id not a valid try another",
-    });
+  if (!post) {
+    return sendError(res, { message: "post id not a valid try another" });
   }
 
   const deletedPost = await postServices.deleteSavedPost({
     userId,
-    postId:parseInt(postId)
+    postId: parseInt(postId),
   });
 
-  const message = deletedPost
-    ? "post unSaved successfully"
-    : "failed to unSaved post";
+  const message = deletedPost ? "post unSaved successfully" : "failed to unSaved post";
 
   return sendSuccess(res, { statusCode: 200, message });
 };
-const getAllPostsByUserId: Controller = async (req, res) => {
-  const { userId } = req.params;
 
- 
+const getAllPostsByUserId: Controller = async (req, res) => {
+  const userId = req.params.userId as string;
+
   if (req.user?.id !== userId) {
-    return sendError(res, {
-      message: "you don't have access!",
-    });
+    return sendError(res, { message: "you don't have access!" });
   }
 
- 
-
-
-  const userPostsList = await postServices.fetchPostsListByUserId(userId!);
+  const userPostsList = await postServices.fetchPostsListByUserId(userId);
 
   const message = userPostsList.length > 0
     ? "fetch posts successfully"
     : "failed to fetch posts";
 
-  return sendSuccess(res, { statusCode: 200, message ,data:userPostsList});
+  return sendSuccess(res, { statusCode: 200, message, data: userPostsList });
 };
 
 const postControllers = {
@@ -218,6 +188,7 @@ const postControllers = {
   getSavedPostsList,
   createNewSavedPost,
   deleteSavedPost,
-  getAllPostsByUserId
+  getAllPostsByUserId,
 };
+
 export default postControllers;
