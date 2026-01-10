@@ -100,5 +100,11 @@ export const auth = betterAuth({
         prompt: "select_account consent", 
         
     },
-    }
+    },
+     advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none", // Must be "none" for cross-site usage
+      secure: true, // Must be true when SameSite is "none"
+      httpOnly: true, // Good practice for security
+    },}
 });
