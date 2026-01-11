@@ -17,6 +17,8 @@ export const auth = betterAuth({
         "https://postella-beta.vercel.app",
         "https://nuance-daily.vercel.app",
         
+        "https://nuance-daily.vercel.app",
+        
     ],
     plugins: [bearer(),
     // emailOTP({
@@ -100,6 +102,22 @@ export const auth = betterAuth({
         prompt: "select_account consent", 
         
     },
+    },
+     advanced: {
+          cookies: {
+            
+            session_token: {
+                
+                name: "custom_session_id", // Completely custom name
+            },
+        },
+    defaultCookieAttributes: {
+      
+      sameSite: "none", // Must be "none" for cross-site usage
+      secure: true, // Must be true when SameSite is "none"
+      httpOnly: false, // Good practice for security
+    }
+}
     },
      advanced: {
           cookies: {
