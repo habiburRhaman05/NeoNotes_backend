@@ -103,35 +103,22 @@ export const auth = betterAuth({
         
     },
     },
-     advanced: {
-          cookies: {
+//      advanced: {
+//           cookies: {
             
-            session_token: {
+//             session_token: {
                 
-                name: "custom_session_id", // Completely custom name
-            },
-        },
-    defaultCookieAttributes: {
-      
-      sameSite: "none", // Must be "none" for cross-site usage
-      secure: true, // Must be true when SameSite is "none"
-      httpOnly: false, // Good practice for security
-    }
-}
-    },
-     advanced: {
-          cookies: {
-            
-            session_token: {
-                
-                name: "custom_session_id", // Completely custom name
-            },
-        },
-    defaultCookieAttributes: {
-      
-      sameSite: "none", // Must be "none" for cross-site usage
-      secure: true, // Must be true when SameSite is "none"
-      httpOnly: true, // Good practice for security
-    }
-}
+//                 name: "custom_session_id", // Completely custom name
+//             },
+//         },
+//     defaultCookieAttributes: {
+//       sameSite: "none", // Must be "none" for cross-site usage
+//       secure: true, // Must be true when SameSite is "none"
+//       httpOnly: false, // Good practice for security
+//     }
+// }
+    
+
+
+
 });
