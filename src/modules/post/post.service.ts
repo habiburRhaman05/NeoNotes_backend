@@ -186,6 +186,10 @@ const newSavedPosts = await prisma.savedPost.delete({
   }
   return false
 }
+const uploadPostThumbnailService = async ()=>{
+// LOGIC TO UPLOAD IMAGE ON CLOUD
+  return "https://www.franceguide.info/wp-content/uploads/sites/18/nice_ss.jpg"
+}
 
 
 const postServices = {
@@ -197,7 +201,8 @@ const postServices = {
   fetchPostsListByUserId,
   getSavedPostsByUserId,
   createSavedPost,
-  deleteSavedPost
+  deleteSavedPost,
+  uploadPostThumbnailService
 };
 
 export default postServices;

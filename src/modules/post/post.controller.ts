@@ -178,6 +178,14 @@ const getAllPostsByUserId: Controller = async (req, res) => {
 
   return sendSuccess(res, { statusCode: 200, message, data: userPostsList });
 };
+const uploadPostImageHandler: Controller = async (req, res) => {
+ 
+  const result = await postServices.uploadPostThumbnailService()
+
+  return sendSuccess(res, { statusCode: 200, message:"thumbnail uploaded", data: {url:result} });
+};
+
+
 
 const postControllers = {
   getAllPosts,
@@ -189,6 +197,7 @@ const postControllers = {
   createNewSavedPost,
   deleteSavedPost,
   getAllPostsByUserId,
+  uploadPostImageHandler
 };
 
 export default postControllers;

@@ -43,7 +43,9 @@ router.route("/:postId")
 router.use(auth); // Apply auth to everything below this line
 
 router.route("/")
-  .post(validate(createPostSchema), asyncHandler(postControllers.createPost));
+  .post( asyncHandler(postControllers.createPost));
+router.route("/upload-thumbnail")
+  .post(asyncHandler(postControllers.uploadPostImageHandler));
 
 router.route("/:postId")
   .put(asyncHandler(postControllers.updatePost))
