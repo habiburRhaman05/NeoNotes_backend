@@ -104,10 +104,13 @@ export const auth = betterAuth({
     },
     },
      advanced: {
-    defaultCookieAttributes: {
-      sameSite: "none", // Must be "none" for cross-site usage
-      secure: true, // Must be true when SameSite is "none"
-      httpOnly: true, // Good practice for security
+       defaultCookieAttributes: {
+  httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // MUST be true in prod!
+      sameSite: 'Lax', // Or 'Strict', depends on needs, Lax is common
+      domain: process.env.NODE_ENV === 'production' ? 'https://nuance-daily.vercel.app' : 'http://localhost:3000', // Match your domain
+      maxAge: 60 * 60 * 24 * 7, // e.g., 1 week
+      path: '/',
     }
 }
     
